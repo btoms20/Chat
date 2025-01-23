@@ -63,7 +63,15 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
         tableView.backgroundColor = UIColor(theme.colors.mainBG)
         tableView.scrollsToTop = false
         tableView.isScrollEnabled = isScrollEnabled
-
+        
+        if let blurEffect = theme.colors.blurEffect {
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: blurEffect.headerHeight))
+            let footerView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: blurEffect.footerHeight))
+            
+            tableView.tableHeaderView = type == .conversation ? footerView : nil
+            tableView.tableFooterView = type == .conversation ? headerView : nil
+        }
+        
         NotificationCenter.default.addObserver(forName: .onScrollToBottom, object: nil, queue: nil) { _ in
             DispatchQueue.main.async {
                 if !context.coordinator.sections.isEmpty {
