@@ -291,6 +291,11 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
         .applyIf(!isScrollEnabled) {
             $0.frame(height: tableContentHeight)
         }
+        .applyIf(theme.colors.blurEffect != nil) {
+            $0
+                .padding(.top, theme.colors.blurEffect!.paddingTop)
+                .padding(.bottom, theme.colors.blurEffect!.paddingBottom)
+        }
         .onStatusBarTap {
             shouldScrollToTop()
         }
