@@ -137,7 +137,14 @@ struct InputView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
         }
-        .background(backgroundColor)
+        // Apply the blurEffect if we have one
+        .applyIf(theme.colors.blurEffect != nil) {
+            $0.background(theme.colors.blurEffect!.material)
+        }
+        // Otherwise apply the themes mainBG
+        .applyIf(theme.colors.blurEffect == nil) {
+            $0.background(theme.colors.mainBG)
+        }
         .onAppear {
             viewModel.recordingPlayer = recordingPlayer
             viewModel.setRecorderSettings(recorderSettings: recorderSettings)
