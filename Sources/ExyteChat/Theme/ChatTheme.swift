@@ -66,6 +66,8 @@ public struct ChatTheme {
 
         public var sendButtonBackground: Color
         public var recordDot: Color
+        
+        public var blurEffect:BlurEffectStyle?
 
         public init(
             mainBG: Color = Color("mainBG", bundle: .current),
@@ -87,7 +89,8 @@ public struct ChatTheme {
             statusError: Color = Color("statusError", bundle: .current),
             statusGray: Color = Color("statusGray", bundle: .current),
             sendButtonBackground: Color = Color("messageMyBG", bundle: .current),
-            recordDot: Color = Color("menuTextDelete", bundle: .current)
+            recordDot: Color = Color("menuTextDelete", bundle: .current),
+            blurEffect: BlurEffectStyle? = nil
         ) {
             self.mainBG = mainBG
             self.mainTint = mainTint
@@ -109,6 +112,7 @@ public struct ChatTheme {
             self.statusGray = statusGray
             self.sendButtonBackground = sendButtonBackground
             self.recordDot = recordDot
+            self.blurEffect = blurEffect
         }
     }
 

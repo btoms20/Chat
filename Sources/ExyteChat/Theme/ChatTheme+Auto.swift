@@ -52,7 +52,7 @@ extension View {
     /// - Note: If you're using a custom color and you want the exact color to come through, try disabling `improveContrast` but be sure the text is still legible.
     /// - Note: By default, this method mixes your theme `color` into the `ChatView`'s default background, if you don't want this behavior, you can set `background` to one of `.systemDefault`, or `.static(Color)`.
     @available(iOS 18.0, *)
-    public func chatTheme(color ac: Color, background: ThemedBackgroundStyle = .mixedWithAccentColor(), improveContrast: Bool = true) -> some View {
+    public func chatTheme(color ac: Color, background: ThemedBackgroundStyle = .mixedWithAccentColor(), blurEffect:BlurEffectStyle? = nil, improveContrast: Bool = true) -> some View {
         let accentColor:Color
         if improveContrast {
             let luminance = ac.luminance
@@ -62,7 +62,7 @@ extension View {
         } else {
             accentColor = ac
         }
-        return modifier(ThemedChatView(accentColor: accentColor, background: background, improveContrast: improveContrast))
+        return modifier(ThemedChatView(accentColor: accentColor, background: background, blurEffect: blurEffect, improveContrast: improveContrast))
     }
 }
 
@@ -81,7 +81,7 @@ extension Color {
 
 extension ChatTheme {
     @available(iOS 18.0, *)
-    internal init(accentColor: Color, background: ThemedBackgroundStyle = .mixedWithAccentColor(), improveContrast:Bool) {
+    internal init(accentColor: Color, background: ThemedBackgroundStyle = .mixedWithAccentColor(), blurEffect: BlurEffectStyle? = nil, improveContrast:Bool) {
         let backgroundColor:Color = background.getBackgroundColor(withAccent: accentColor, improveContrast: improveContrast)
         let friendMessageColor:Color = background.getFriendMessageColor(improveContrast: improveContrast)
         self.init(
@@ -94,7 +94,8 @@ extension ChatTheme {
                 messageFriendBG: friendMessageColor,
                 inputBG: friendMessageColor,
                 menuBG: backgroundColor,
-                sendButtonBackground: accentColor
+                sendButtonBackground: accentColor,
+                blurEffect: blurEffect
             ), images: .init(
                 cross: Image(systemName: "xmark"),
                 pauseRecord: Image(systemName: "pause.fill"),
@@ -149,12 +150,13 @@ public enum ThemedBackgroundStyle {
 internal struct ThemedChatView: ViewModifier {
     var accentColor:Color
     var background:ThemedBackgroundStyle
+    var blurEffect:BlurEffectStyle?
     var improveContrast:Bool
     
     func body(content: Content) -> some View {
         let backgroundColor = background.getBackgroundColor(withAccent: accentColor, improveContrast: improveContrast)
         return content
-            .chatTheme(ChatTheme(accentColor: accentColor, background: background, improveContrast: improveContrast))
+            .chatTheme(ChatTheme(accentColor: accentColor, background: background, blurEffect: blurEffect, improveContrast: improveContrast))
             .mediaPickerTheme(
                 .init(
                     main: .init(
