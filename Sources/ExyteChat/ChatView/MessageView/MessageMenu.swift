@@ -80,21 +80,29 @@ struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
     }
     
     var body: some View {
-        FloatingButton(
-            mainButtonView: mainButton().allowsHitTesting(false),
-            buttons: ActionEnum.allCases.map {
-                menuButton(title: $0.title(), icon: $0.icon(), action: $0)
-            },
-            isOpen: $isShowingMenu
-        )
-        .straight()
-        //.mainZStackAlignment(.top)
-        .initialOpacity(0)
-        .direction(.bottom)
-        .alignment(alignment)
-        .spacing(2)
-        .animation(.linear(duration: 0.2))
-        .menuButtonsSize($menuButtonsSize)
+        ZStack(alignment: .top) {
+            FloatingButton(
+                mainButtonView: mainButton().allowsHitTesting(false),
+                buttons: ActionEnum.allCases.map {
+                    menuButton(title: $0.title(), icon: $0.icon(), action: $0)
+                },
+                isOpen: $isShowingMenu
+            )
+            .straight()
+            //.mainZStackAlignment(.top)
+            .initialOpacity(0)
+            .direction(.bottom)
+            .alignment(alignment)
+            .spacing(2)
+            .animation(.linear(duration: 0.2))
+            .menuButtonsSize($menuButtonsSize)
+
+            // Emoji Reaction Menu (the offset places this view above the message)
+            ReactionSelectionView(color: theme.colors.messageFriendBG, alignment: alignment, leadingPadding: leadingPadding, trailingPadding: trailingPadding) { emoji in
+                print("Reaction: \(emoji)")
+            }
+            .offset(x: 0, y: -45)
+        }
     }
 
     func menuButton(title: String, icon: Image, action: ActionEnum) -> some View {
